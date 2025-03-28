@@ -2,7 +2,7 @@ import { Box, Snackbar, Alert } from '@mui/material';
 import WeatherCard from '../../components/WeatherCard/WeatherCard';
 import styles from './Dashboard.module.css';
 import { useEffect, useState } from 'react';
-import { CityResponse, getCurrentWeather, WeatherResponse } from '../../hooks/api';
+import { CityResponse, getCurrentWeather, WeatherResponse } from '../../api';
 import SearchBar from '../../components/SearchBar/SearchBar';
 
 const USE_DUMMY_DATA = true;
