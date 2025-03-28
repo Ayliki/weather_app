@@ -1,10 +1,28 @@
 .container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #fafafa, #eeeeee);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+}
+
+.content {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.searchBarRow {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+.cardContainer {
+  flex: 1;
+  display: flex;
   align-items: center;
-  min-height: calc(100vh - 64px);
-  padding: 24px;
-  background-color: #f5f5f5;
+  justify-content: center;
 }
 
 @media (max-width: 600px) {
