@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardHeader, CardContent, Typography, Box, IconButton, Tooltip } from '@mui/material';
+import { Card, CardHeader, CardContent, Typography, Box, IconButton, Tooltip, CircularProgress } from '@mui/material';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import CloudIcon from '@mui/icons-material/Cloud';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
@@ -27,6 +27,7 @@ interface WeatherCardProps {
     weatherData: WeatherData;
     onAddToFavorites?: () => void;
     isAuthenticated?: boolean;
+    isLoading?: boolean;
 }
 
 const getWeatherIcon = (description: string) => {
@@ -51,7 +52,7 @@ const getWeatherIcon = (description: string) => {
     return <WbSunnyIcon className={styles.icon} />;
 };
 
-const WeatherCard = ({ weatherData, onAddToFavorites, isAuthenticated = false }: WeatherCardProps) => {
+const WeatherCard = ({ weatherData, onAddToFavorites, isAuthenticated = false, isLoading = false }: WeatherCardProps) => {
     const weatherIcon = getWeatherIcon(weatherData.description);
     const [isFavorite, setIsFavorite] = useState(false);
 
@@ -81,31 +82,39 @@ const WeatherCard = ({ weatherData, onAddToFavorites, isAuthenticated = false }:
                 }
             />
             <CardContent>
-                <Box className={styles.temperatureContainer}>
-                    <Typography variant="h4" component="div">
-                        {weatherData.temperature.celsius}°C
-                    </Typography>
-                    <Typography variant="h6" color="text.secondary">
-                        {weatherData.temperature.fahrenheit}°F
-                    </Typography>
-                </Box>
-                <Typography variant="h6" color="text.secondary" gutterBottom>
-                    {weatherData.description}
-                </Typography>
-                <Box className={styles.detailsContainer}>
-                    <Typography variant="body2">
-                        Feels like: {weatherData.feelsLike}°C
-                    </Typography>
-                    <Typography variant="body2">
-                        Humidity: {weatherData.humidity}%
-                    </Typography>
-                    <Typography variant="body2">
-                        Pressure: {weatherData.pressure} hPa
-                    </Typography>
-                    <Typography variant="body2">
-                        Wind Speed: {weatherData.windSpeed} m/s
-                    </Typography>
-                </Box>
+                {isLoading ? (
+                    <Box className={styles.loadingContainer}>
+                        <CircularProgress />
+                    </Box>
+                ) : (
+                    <>
+                        <Box className={styles.temperatureContainer}>
+                            <Typography variant="h4" component="div">
+                                {weatherData.temperature.celsius}°C
+                            </Typography>
+                            <Typography variant="h6" color="text.secondary">
+                                {weatherData.temperature.fahrenheit}°F
+                            </Typography>
+                        </Box>
+                        <Typography variant="h6" color="text.secondary" gutterBottom>
+                            {weatherData.description}
+                        </Typography>
+                        <Box className={styles.detailsContainer}>
+                            <Typography variant="body2">
+                                Feels like: {weatherData.feelsLike}°C
+                            </Typography>
+                            <Typography variant="body2">
+                                Humidity: {weatherData.humidity}%
+                            </Typography>
+                            <Typography variant="body2">
+                                Pressure: {weatherData.pressure} hPa
+                            </Typography>
+                            <Typography variant="body2">
+                                Wind Speed: {weatherData.windSpeed} m/s
+                            </Typography>
+                        </Box>
+                    </>
+                )}
             </CardContent>
         </Card>
     );

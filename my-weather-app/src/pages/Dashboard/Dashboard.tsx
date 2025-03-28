@@ -2,42 +2,25 @@ import { Box, Snackbar, Alert } from '@mui/material';
 import WeatherCard from '../../components/WeatherCard/WeatherCard';
 import styles from './Dashboard.module.css';
 import { useEffect, useState } from 'react';
-import { CityResponse, getCities } from '../../hooks/api';
+import { CityResponse, getCurrentWeather, WeatherResponse } from '../../hooks/api';
 import SearchBar from '../../components/SearchBar/SearchBar';
-
 
 const USE_DUMMY_DATA = true;
 
 const dummyCities: CityResponse[] = [
-    { id: '1', name: 'New York' },
-    { id: '2', name: 'Los Angeles' },
-    { id: '3', name: 'Chicago' },
+    { id: 1, name: 'New York', longitude: -74.006, latitude: 40.7128 },
+    { id: 2, name: 'Los Angeles', longitude: -118.2437, latitude: 34.0522 },
+    { id: 3, name: 'Chicago', longitude: -87.6298, latitude: 41.8781 },
 ];
-
-
 
 const Dashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCity, setSelectedCity] = useState<CityResponse | null>(null);
+    const [weatherData, setWeatherData] = useState<WeatherResponse | null>(null);
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     // TODO: Replace with actual authentication state
     const isAuthenticated = false;
-
-    // const [cities, setCities] = useState<CityResponse[]>([]);
-
-    // useEffect(() => {
-    //   if (!USE_DUMMY_DATA) {
-    //     const fetchCities = async () => {
-    //       try {
-    //         const data = await getCities();
-    //         setCities(data);
-    //       } catch (error) {
-    //         console.error('Error fetching cities:', error);
-    //       }
-    //     };
-    //     fetchCities();
-    //   }
-    // }, []);
 
     const handleSearch = () => {
         let foundCity: CityResponse | undefined;
@@ -51,6 +34,27 @@ const Dashboard = () => {
         setSelectedCity(foundCity || null);
     };
 
+    useEffect(() => {
+        const fetchWeatherData = async () => {
+            if (selectedCity) {
+                setIsLoading(true);
+                try {
+                    const weather = await getCurrentWeather(
+                        selectedCity.latitude.toString(),
+                        selectedCity.longitude.toString()
+                    );
+                    setWeatherData(weather);
+                } catch (error) {
+                    console.error('Error fetching weather data:', error);
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        fetchWeatherData();
+    }, [selectedCity]);
+
     const handleAddToFavorites = () => {
         if (!isAuthenticated) {
             setShowLoginPrompt(true);
@@ -58,6 +62,14 @@ const Dashboard = () => {
             // TODO: Implement add to favorites logic
             console.log('Adding to favorites...');
         }
+    };
+
+    const convertKelvinToCelsius = (kelvin: number): number => {
+        return Math.round(kelvin - 273.15);
+    };
+
+    const convertKelvinToFahrenheit = (kelvin: number): number => {
+        return Math.round((kelvin - 273.15) * 9 / 5 + 32);
     };
 
     return (
@@ -75,15 +87,19 @@ const Dashboard = () => {
                     <WeatherCard
                         weatherData={{
                             city: selectedCity.name,
-                            temperature: { celsius: 25, fahrenheit: 77 },
-                            description: 'Sunny',
-                            feelsLike: 24,
-                            humidity: 60,
-                            pressure: 1013,
-                            windSpeed: 3,
+                            temperature: weatherData ? {
+                                celsius: convertKelvinToCelsius(weatherData.temperature),
+                                fahrenheit: convertKelvinToFahrenheit(weatherData.temperature),
+                            } : { celsius: 0, fahrenheit: 0 },
+                            description: weatherData?.weather_description || '',
+                            feelsLike: weatherData ? convertKelvinToCelsius(weatherData.feels_like) : 0,
+                            humidity: weatherData?.humidity || 0,
+                            pressure: weatherData?.pressure || 0,
+                            windSpeed: weatherData?.wind_speed || 0,
                         }}
                         onAddToFavorites={handleAddToFavorites}
                         isAuthenticated={isAuthenticated}
+                        isLoading={isLoading}
                     />
                 ) : (
                     <p>No city selected. Please search for a city.</p>
