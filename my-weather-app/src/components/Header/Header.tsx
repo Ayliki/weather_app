@@ -2,16 +2,19 @@ import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import styles from './Header.module.css';
+import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
     const navigate = useNavigate();
-    // TODO: Replace with actual authentication state
-    const isAuthenticated = false;
+    const { isAuthenticated, logout } = useAuth();
 
-    const handleLogout = () => {
-        // TODO: Implement logout logic
-        console.log('Logging out...');
-        navigate('/login');
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/login');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
     };
 
     return (

@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Favorites from './pages/Favorites/Favorites';
 import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
+import { AuthProvider } from './context/AuthContext';
 
 const theme = createTheme({
   palette: {
@@ -21,17 +22,19 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <div>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-          </Routes>
-        </div>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <div>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
