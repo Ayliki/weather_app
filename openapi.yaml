@@ -105,14 +105,43 @@ paths:
           description: Prefix of the city names to be returned
       responses:
         '200':
-          description: Successfully logged out
+          description: List of cities
           content:
             application/json:
               schema:
                 type:
                   array
                 items:
-                  $ref: '#/components/schemas/LogoutResponse'
+                  $ref: '#/components/schemas/CityResponse'
+
+  /api/weather/current:
+    get:
+      summary: Get current weather information
+      operationId: modules.weather.routes.get_current_weather
+      tags:
+        - weather
+      parameters:
+        - name: latitude
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Latitude of the location
+        - name: longitude
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Longitude of the location
+      responses:
+        '200':
+          description: Current weather information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherResponse'
+
+
 
 components:
   schemas:
@@ -160,6 +189,63 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         name:
           type: string
+        longitude:
+          type: number
+          format: float
+        latitude:
+          type: number
+          format: float
+
+    WeatherResponse:
+      type: object
+      properties:
+        weather_name:
+          type: string
+        weather_description:
+          type: string
+        icon_url:
+          type: string
+        temperature:
+          type: number
+          format: float
+        feels_like:
+          type: number
+          format: float
+        pressure:
+          type: integer
+        humidity:
+          type: integer
+        temp_min:
+          type: number
+          format: float
+        temp_max:
+          type: number
+          format: float
+        sea_level:
+          type: integer
+        grnd_level:
+          type: integer
+        visibility:
+          type: number
+          format: float
+        wind_speed:
+          type: number
+          format: float
+        wind_deg:
+          type: integer
+        wind_gust:
+          type: number
+          format: float
+        clouds:
+          type: integer
+        rain_one_hour:
+          type: number
+          format: float
+          nullable: true
+        snow_one_hour:
+          type: number
+          format: float
+          nullable: true

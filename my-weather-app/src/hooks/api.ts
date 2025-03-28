@@ -8,8 +8,10 @@ const apiClient = axios.create({
 })
 
 export interface CityResponse {
-    id: string,
-    name: string,
+    id: number;
+    name: string;
+    longitude: number;
+    latitude: number;
 }
 
 export const getCities = async (
@@ -21,6 +23,36 @@ export const getCities = async (
     if (namePrefix) params.name_prefix = namePrefix;
 
     const response = await apiClient.get<CityResponse[]>('/api/weather/cities', { params });
+    return response.data;
+};
+
+export interface WeatherResponse {
+    weather_name: string;
+    weather_description: string;
+    icon_url: string;
+    temperature: number;
+    feels_like: number;
+    pressure: number;
+    humidity: number;
+    temp_min: number;
+    temp_max: number;
+    sea_level: number;
+    grnd_level: number;
+    visibility: number;
+    wind_speed: number;
+    wind_deg: number;
+    wind_gust: number;
+    clouds: number;
+    rain_one_hour?: number | null;
+    snow_one_hour?: number | null;
+}
+
+export const getCurrentWeather = async (
+    latitude: string,
+    longitude: string
+): Promise<WeatherResponse> => {
+    const params = { latitude, longitude };
+    const response = await apiClient.get<WeatherResponse>('/api/weather/current', { params });
     return response.data;
 };
 
