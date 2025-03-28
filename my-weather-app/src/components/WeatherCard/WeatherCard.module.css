@@ -1,0 +1,44 @@
+.card {
+  min-width: 300px;
+  max-width: 400px;
+  margin: 16px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.cardHeader {
+  background-color: #f5f5f5;
+}
+
+.icon {
+  color: #ff9800;
+  font-size: 2rem;
+}
+
+.temperatureContainer {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.detailsContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+
+@media (max-width: 600px) {
+  .card {
+    min-width: 280px;
+    margin: 8px;
+  }
+
+  .detailsContainer {
+    grid-template-columns: 1fr;
+  }
+}
