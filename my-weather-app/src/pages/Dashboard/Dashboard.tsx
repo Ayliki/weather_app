@@ -4,6 +4,7 @@ import styles from './Dashboard.module.css';
 import { useEffect, useState } from 'react';
 import { CityResponse, getCurrentWeather, WeatherResponse } from '../../api';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import { useAuth } from '../../context/AuthContext';
 
 const USE_DUMMY_DATA = true;
 
@@ -20,8 +21,7 @@ const Dashboard = () => {
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
-    // TODO: Replace with actual authentication state
-    const isAuthenticated = false;
+    const { isAuthenticated } = useAuth();
 
     const handleSearch = () => {
         setIsSearching(true);

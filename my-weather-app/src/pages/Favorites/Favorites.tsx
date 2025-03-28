@@ -1,11 +1,11 @@
 import { Box, Typography, Button, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import styles from './Favorites.module.css';
+import { useAuth } from '../../context/AuthContext';
 
 const Favorites = () => {
     const navigate = useNavigate();
-    // TODO: Replace with actual authentication state
-    const isAuthenticated = false;
+    const { isAuthenticated } = useAuth();
 
     if (!isAuthenticated) {
         return (
