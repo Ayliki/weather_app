@@ -1,6 +1,9 @@
-.searchContainer {
+.searchBarContainer {
   display: flex;
   gap: 16px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .textField {
@@ -8,6 +11,17 @@
 }
 
 .searchButton {
+  min-width: 120px;
   white-space: nowrap;
-  height: 56px;
+}
+
+@media (max-width: 600px) {
+  .searchBarContainer {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .searchButton {
+    width: 100%;
+  }
 }

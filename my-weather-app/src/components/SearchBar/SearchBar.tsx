@@ -1,25 +1,42 @@
 import React from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, CircularProgress } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
     searchTerm: string;
     onSearchTermChange: (value: string) => void;
     onSearch: () => void;
+    isLoading?: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearchTermChange, onSearch }) => {
+const SearchBar = ({ searchTerm, onSearchTermChange, onSearch, isLoading = false }: SearchBarProps) => {
+    const handleKeyPress = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            onSearch();
+        }
+    };
+
     return (
-        <Box className={styles.searchContainer}>
+        <Box className={styles.searchBarContainer}>
             <TextField
-                label="Search City"
+                fullWidth
                 variant="outlined"
+                placeholder="Search for a city..."
                 value={searchTerm}
                 onChange={(e) => onSearchTermChange(e.target.value)}
-                className={styles.textField}
+                onKeyPress={handleKeyPress}
+                disabled={isLoading}
             />
-            <Button variant="contained" onClick={onSearch} className={styles.searchButton}>
-                Search
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={onSearch}
+                disabled={isLoading}
+                className={styles.searchButton}
+                startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SearchIcon />}
+            >
+                {isLoading ? 'Searching...' : 'Search'}
             </Button>
         </Box>
     );

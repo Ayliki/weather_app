@@ -19,10 +19,12 @@ const Dashboard = () => {
     const [weatherData, setWeatherData] = useState<WeatherResponse | null>(null);
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
     // TODO: Replace with actual authentication state
     const isAuthenticated = false;
 
     const handleSearch = () => {
+        setIsSearching(true);
         let foundCity: CityResponse | undefined;
         if (USE_DUMMY_DATA) {
             foundCity = dummyCities.find(
@@ -32,6 +34,7 @@ const Dashboard = () => {
             // foundCity = cities.find((city) => city.name.toLowerCase() === searchTerm.toLowerCase());
         }
         setSelectedCity(foundCity || null);
+        setIsSearching(false);
     };
 
     useEffect(() => {
@@ -79,6 +82,7 @@ const Dashboard = () => {
                     searchTerm={searchTerm}
                     onSearchTermChange={setSearchTerm}
                     onSearch={handleSearch}
+                    isLoading={isSearching}
                 />
             </Box>
 
