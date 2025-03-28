@@ -14,8 +14,21 @@
 }
 
 .icon {
-  color: #ff9800;
-  font-size: 2rem;
+  color: #1976d2;
+  font-size: 2.5rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover .icon {
+  transform: scale(1.1);
+}
+
+.favoriteButton {
+  transition: transform 0.2s ease-in-out;
+}
+
+.favoriteButton:hover {
+  transform: scale(1.1);
 }
 
 .temperatureContainer {
@@ -40,5 +53,9 @@
 
   .detailsContainer {
     grid-template-columns: 1fr;
+  }
+
+  .icon {
+    font-size: 2rem;
   }
 }

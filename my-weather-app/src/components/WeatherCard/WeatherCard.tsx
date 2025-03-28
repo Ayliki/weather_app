@@ -1,5 +1,13 @@
-import { Card, CardHeader, CardContent, Typography, Box } from '@mui/material';
+import { useState } from 'react';
+import { Card, CardHeader, CardContent, Typography, Box, IconButton, Tooltip } from '@mui/material';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import CloudIcon from '@mui/icons-material/Cloud';
+import CloudQueueIcon from '@mui/icons-material/CloudQueue';
+import ThunderstormIcon from '@mui/icons-material/Thunderstorm';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import styles from './WeatherCard.module.css';
 
 interface WeatherData {
@@ -17,15 +25,60 @@ interface WeatherData {
 
 interface WeatherCardProps {
     weatherData: WeatherData;
+    onAddToFavorites?: () => void;
+    isAuthenticated?: boolean;
 }
 
-const WeatherCard = ({ weatherData }: WeatherCardProps) => {
+const getWeatherIcon = (description: string) => {
+    const lowerDescription = description.toLowerCase();
+
+    if (lowerDescription.includes('clear') || lowerDescription.includes('sunny')) {
+        return <WbSunnyIcon className={styles.icon} />;
+    } else if (lowerDescription.includes('cloud')) {
+        if (lowerDescription.includes('partly')) {
+            return <CloudQueueIcon className={styles.icon} />;
+        }
+        return <CloudIcon className={styles.icon} />;
+    } else if (lowerDescription.includes('rain')) {
+        return <WaterDropIcon className={styles.icon} />;
+    } else if (lowerDescription.includes('storm') || lowerDescription.includes('thunder')) {
+        return <ThunderstormIcon className={styles.icon} />;
+    } else if (lowerDescription.includes('snow')) {
+        return <AcUnitIcon className={styles.icon} />;
+    }
+
+    // Default icon
+    return <WbSunnyIcon className={styles.icon} />;
+};
+
+const WeatherCard = ({ weatherData, onAddToFavorites, isAuthenticated = false }: WeatherCardProps) => {
+    const weatherIcon = getWeatherIcon(weatherData.description);
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    const handleFavoriteClick = () => {
+        if (onAddToFavorites) {
+            onAddToFavorites();
+        }
+        setIsFavorite(!isFavorite);
+    };
+
     return (
         <Card className={styles.card}>
             <CardHeader
-                avatar={<WbSunnyIcon className={styles.icon} />}
+                avatar={weatherIcon}
                 title={weatherData.city}
                 className={styles.cardHeader}
+                action={
+                    <Tooltip title={isAuthenticated ? "Add to favorites" : "Login to add favorites"}>
+                        <IconButton
+                            onClick={handleFavoriteClick}
+                            color={isFavorite ? "error" : "default"}
+                            className={styles.favoriteButton}
+                        >
+                            {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                        </IconButton>
+                    </Tooltip>
+                }
             />
             <CardContent>
                 <Box className={styles.temperatureContainer}>
