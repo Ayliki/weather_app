@@ -1,0 +1,13 @@
+.searchContainer {
+  display: flex;
+  gap: 16px;
+}
+
+.textField {
+  flex: 1;
+}
+
+.searchButton {
+  white-space: nowrap;
+  height: 56px;
+}
