@@ -84,6 +84,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/weather/cities:
+    get:
+      summary: Get a list of cities
+      operationId: modules.weather.routes.get_cities
+      tags:
+        - weather
+      parameters:
+        - name: min_population
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Minimum population of the cities to be returned
+        - name: name_prefix
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Prefix of the city names to be returned
+      responses:
+        '200':
+          description: Successfully logged out
+          content:
+            application/json:
+              schema:
+                type:
+                  array
+                items:
+                  $ref: '#/components/schemas/LogoutResponse'
+
 components:
   schemas:
     RegisterRequest:
@@ -94,6 +124,7 @@ components:
         password:
           type: string
           format: password
+
     LoginRequest:
       type: object
       properties:
@@ -102,6 +133,7 @@ components:
         password:
           type: string
           format: password
+
     UserResponse:
       type: object
       properties:
@@ -111,13 +143,23 @@ components:
           type: string
         created_at:
           type: string
+
     ErrorResponse:
       type: object
       properties:
         error:
           type: string
+
     LogoutResponse:
       type: object
       properties:
         message:
+          type: string
+
+    CityResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
           type: string
