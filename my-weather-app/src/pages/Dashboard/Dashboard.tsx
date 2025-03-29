@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Snackbar, Alert } from '@mui/material';
-import { dummyForecastData } from '../../data/dummyData';
 import WeatherDisplay from '../../components/WeatherDisplay/WeatherDisplay';
+import { getCities, getCurrentWeather, getForecast } from '../../api/weatherApi';
+import { WeatherResponse, ForecastResponse } from '../../api/types';
 import styles from './Dashboard.module.css';
+
+interface WeatherData {
+    currentWeather: WeatherResponse;
+    forecast: ForecastResponse;
+}
 
 const Dashboard: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCity, setSelectedCity] = useState<string | null>(null);
+    const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [snackbar, setSnackbar] = useState<{
         open: boolean;
         message: string;
@@ -28,20 +36,41 @@ const Dashboard: React.FC = () => {
             return;
         }
 
+        setIsLoading(true);
         try {
-            // TODO: Implement actual API call
-            setSelectedCity(searchQuery);
+            // Search for city
+            const cities = await getCities(undefined, searchQuery);
+            if (cities.length === 0) {
+                throw new Error('City not found');
+            }
+
+            const city = cities[0];
+            setSelectedCity(city.name);
+
+            // Get weather data
+            const [currentWeather, forecast] = await Promise.all([
+                getCurrentWeather(city.latitude.toString(), city.longitude.toString()),
+                getForecast(city.latitude.toString(), city.longitude.toString())
+            ]);
+
+            setWeatherData({
+                currentWeather,
+                forecast
+            });
+
             setSnackbar({
                 open: true,
-                message: `Weather data for ${searchQuery} loaded successfully`,
+                message: `Weather data for ${city.name} loaded successfully`,
                 severity: 'success'
             });
-        } catch {
+        } catch (error) {
             setSnackbar({
                 open: true,
-                message: 'Failed to load weather data',
+                message: error instanceof Error ? error.message : 'Failed to load weather data',
                 severity: 'error'
             });
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -69,16 +98,17 @@ const Dashboard: React.FC = () => {
                         variant="contained"
                         color="primary"
                         className={styles.searchButton}
+                        disabled={isLoading}
                     >
-                        Search
+                        {isLoading ? 'Loading...' : 'Search'}
                     </Button>
                 </form>
 
-                {selectedCity ? (
+                {selectedCity && weatherData ? (
                     <WeatherDisplay
                         cityName={selectedCity}
-                        currentWeather={dummyForecastData.list[0]}
-                        forecast={dummyForecastData}
+                        currentWeather={weatherData.currentWeather}
+                        forecast={weatherData.forecast}
                         onAddToFavorites={() => {
                             setSnackbar({
                                 open: true,
@@ -87,7 +117,7 @@ const Dashboard: React.FC = () => {
                             });
                         }}
                         isAuthenticated={true}
-                        isLoading={false}
+                        isLoading={isLoading}
                     />
                 ) : (
                     <Box className={styles.noCitySelected}>
