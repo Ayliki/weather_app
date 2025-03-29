@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { CityResponse, getCurrentWeather, WeatherResponse } from '../../api';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { useAuth } from '../../context/AuthContext';
+import { addToFavorites } from '../../api/favoritesApi';
 
 const USE_DUMMY_DATA = true;
 
@@ -19,6 +20,8 @@ const Dashboard = () => {
     const [selectedCity, setSelectedCity] = useState<CityResponse | null>(null);
     const [weatherData, setWeatherData] = useState<WeatherResponse | null>(null);
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
     const { isAuthenticated } = useAuth();
@@ -58,12 +61,23 @@ const Dashboard = () => {
         fetchWeatherData();
     }, [selectedCity]);
 
-    const handleAddToFavorites = () => {
+    const handleAddToFavorites = async () => {
         if (!isAuthenticated) {
             setShowLoginPrompt(true);
-        } else {
-            // TODO: Implement add to favorites logic
-            console.log('Adding to favorites...');
+            return;
+        }
+
+        if (!selectedCity) {
+            setShowErrorMessage(true);
+            return;
+        }
+
+        try {
+            await addToFavorites(selectedCity);
+            setShowSuccessMessage(true);
+        } catch (error) {
+            console.error('Error adding to favorites:', error);
+            setShowErrorMessage(true);
         }
     };
 
@@ -122,6 +136,36 @@ const Dashboard = () => {
                     sx={{ width: '100%' }}
                 >
                     Please log in to save cities to your favorites
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={showSuccessMessage}
+                autoHideDuration={6000}
+                onClose={() => setShowSuccessMessage(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={() => setShowSuccessMessage(false)}
+                    severity="success"
+                    sx={{ width: '100%' }}
+                >
+                    City added to favorites successfully!
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={showErrorMessage}
+                autoHideDuration={6000}
+                onClose={() => setShowErrorMessage(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={() => setShowErrorMessage(false)}
+                    severity="error"
+                    sx={{ width: '100%' }}
+                >
+                    Failed to add city to favorites. Please try again.
                 </Alert>
             </Snackbar>
         </Box>
