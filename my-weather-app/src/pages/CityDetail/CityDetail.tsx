@@ -9,7 +9,7 @@ import styles from './CityDetail.module.css';
 const CityDetail: React.FC = () => {
     const navigate = useNavigate();
     const weatherData = dummyForecastData.list[0];
-    const cityName = "New York"; // In a real app, this would come from the API
+    const cityName = "New York";
 
     if (!weatherData) {
         return (
@@ -53,8 +53,8 @@ const CityDetail: React.FC = () => {
                                 windDeg: weatherData.wind.deg,
                                 windGust: weatherData.wind.gust,
                                 clouds: weatherData.clouds.all,
-                                rainOneHour: null,
-                                snowOneHour: null
+                                rainOneHour: weatherData.rain?.['1h'] || null,
+                                snowOneHour: weatherData.snow?.['1h'] || null
                             }}
                             onAddToFavorites={() => { }}
                             isAuthenticated={true}
