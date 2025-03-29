@@ -1,34 +1,71 @@
 .card {
   min-width: 300px;
-  max-width: 400px;
-  margin: 16px;
-  transition: transform 0.2s ease-in-out;
+  max-width: 600px;
+  margin: 20px auto;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
 .cardHeader {
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #6b8dd6 0%, #8e37d7 100%);
+  color: white;
+  border-radius: 15px 15px 0 0;
+  padding: 16px 24px;
+}
+
+.cardHeader .MuiTypography-root {
+  color: white;
 }
 
 .icon {
-  color: #1976d2;
   font-size: 2.5rem;
-  transition: transform 0.3s ease-in-out;
-}
-
-.card:hover .icon {
-  transform: scale(1.1);
+  color: white;
 }
 
 .favoriteButton {
-  transition: transform 0.2s ease-in-out;
+  color: white;
 }
 
 .favoriteButton:hover {
-  transform: scale(1.1);
+  color: #ff4081;
+}
+
+.temperatureContainer {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.detailsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.detailItem:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.detailIcon {
+  color: #6b8dd6;
 }
 
 .loadingContainer {
@@ -38,31 +75,14 @@
   min-height: 200px;
 }
 
-.temperatureContainer {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.detailsContainer {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-top: 16px;
-}
-
 @media (max-width: 600px) {
-  .card {
-    min-width: 280px;
-    margin: 8px;
+  .detailsContainer {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
+@media (max-width: 400px) {
   .detailsContainer {
     grid-template-columns: 1fr;
-  }
-
-  .icon {
-    font-size: 2rem;
   }
 }
