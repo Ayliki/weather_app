@@ -84,7 +84,7 @@ const CityDetail = () => {
                 <Box className={styles.cardContainer}>
                     <WeatherCard
                         weatherData={{
-                            city: 'City Name', // You might want to add city names to the dummy data
+                            city: 'City Name',
                             temperature: {
                                 celsius: weatherData.temperature,
                                 fahrenheit: (weatherData.temperature * 9 / 5) + 32
