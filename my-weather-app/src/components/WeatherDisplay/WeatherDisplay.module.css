@@ -1,0 +1,33 @@
+.weatherRow {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.currentWeather {
+  flex: 1;
+  min-width: 300px;
+}
+
+.forecastContainer {
+  flex: 2;
+  min-width: 600px;
+}
+
+@media (max-width: 1200px) {
+  .weatherRow {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .currentWeather {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .forecastContainer {
+    width: 100%;
+    max-width: 600px;
+  }
+}
