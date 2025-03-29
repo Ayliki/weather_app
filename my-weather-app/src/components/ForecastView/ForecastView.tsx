@@ -36,13 +36,23 @@ const ForecastView: React.FC<ForecastViewProps> = ({ forecast }) => {
             >
                 5-Day Forecast
             </Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(5, 1fr)' }, gap: 2 }}>
+            <Box sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                    xs: '1fr',
+                    sm: 'repeat(2, 1fr)',
+                    md: 'repeat(3, 1fr)',
+                    lg: 'repeat(5, 1fr)'
+                },
+                gap: 2,
+                justifyContent: 'center',
+                alignItems: 'stretch'
+            }}>
                 {dailyItems.map((item, index) => (
                     <Card key={index} className={styles.forecastCard}>
-                        <CardContent>
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
                             <Typography
                                 variant="subtitle1"
-                                gutterBottom
                                 sx={{
                                     fontWeight: 500,
                                     color: '#666'
@@ -54,8 +64,7 @@ const ForecastView: React.FC<ForecastViewProps> = ({ forecast }) => {
                                 variant="h6"
                                 sx={{
                                     fontWeight: 600,
-                                    color: '#333',
-                                    marginBottom: '8px'
+                                    color: '#333'
                                 }}
                             >
                                 {Math.round(item.main.temp)}°C
@@ -63,7 +72,6 @@ const ForecastView: React.FC<ForecastViewProps> = ({ forecast }) => {
                             <Typography
                                 variant="body2"
                                 color="textSecondary"
-                                sx={{ marginBottom: '4px' }}
                             >
                                 Feels like: {Math.round(item.main.feels_like)}°C
                             </Typography>
