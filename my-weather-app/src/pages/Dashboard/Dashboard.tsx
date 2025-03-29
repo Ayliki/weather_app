@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
                 message: `Weather data for ${searchQuery} loaded successfully`,
                 severity: 'success'
             });
-        } catch (error) {
+        } catch {
             setSnackbar({
                 open: true,
                 message: 'Failed to load weather data',
