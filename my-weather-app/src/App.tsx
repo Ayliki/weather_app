@@ -1,22 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import Header from './components/Header/Header';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Favorites from './pages/Favorites/Favorites';
 import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
 import { AuthProvider } from './context/AuthContext';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#ff9800',
-    },
-  },
-});
+import theme from './theme';
+import CityDetail from './pages/CityDetail/CityDetail';
 
 function App() {
   return (
@@ -31,6 +22,7 @@ function App() {
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/city/:cityId" element={<CityDetail />} />
             </Routes>
           </div>
         </Router>
