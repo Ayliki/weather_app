@@ -12,7 +12,7 @@
 
 .forecastContainer {
   flex: 1;
-  min-width: 0; /* Prevents flex item from overflowing */
+  min-width: 0;
   max-width: 800px;
   margin: 0 auto;
 }
