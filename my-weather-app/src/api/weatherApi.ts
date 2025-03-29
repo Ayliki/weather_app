@@ -1,5 +1,5 @@
 import apiClient from './client';
-import { CityResponse, WeatherResponse, handleApiError, ErrorResponse } from './types';
+import { CityResponse, WeatherResponse, handleApiError, ErrorResponse, ForecastResponse } from './types';
 import { AxiosError } from 'axios';
 
 export const getCities = async (
@@ -26,6 +26,20 @@ export const getCurrentWeather = async (
     try {
         const params = { latitude, longitude };
         const response = await apiClient.get<WeatherResponse>('/api/weather/current', { params });
+        return response.data;
+    } catch (error) {
+        handleApiError(error as AxiosError<ErrorResponse>);
+        throw error;
+    }
+};
+
+export const getForecast = async (
+    latitude: string,
+    longitude: string
+): Promise<ForecastResponse> => {
+    try {
+        const params = { latitude, longitude };
+        const response = await apiClient.get<ForecastResponse>('/api/weather/forecast', { params });
         return response.data;
     } catch (error) {
         handleApiError(error as AxiosError<ErrorResponse>);
