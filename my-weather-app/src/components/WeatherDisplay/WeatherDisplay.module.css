@@ -3,16 +3,18 @@
   gap: 2rem;
   margin-top: 2rem;
   width: 100%;
+  align-items: center;
 }
 
 .currentWeather {
-  flex: 1;
-  min-width: 300px;
+  flex: 0 0 400px;
 }
 
 .forecastContainer {
-  flex: 2;
-  min-width: 600px;
+  flex: 1;
+  min-width: 0; /* Prevents flex item from overflowing */
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 @media (max-width: 1200px) {
