@@ -1,30 +1,58 @@
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 64px);
-  padding: 24px;
-  background-color: #f5f5f5;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .paper {
-  padding: 32px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
+  padding: 2rem;
+}
+
+.cityGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.cityCard {
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.cityCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .loginButton {
-  margin-top: 24px;
-  min-width: 200px;
+  margin-top: 1rem;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 1200px) {
+  .cityGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .cityGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 600px) {
+  .cityGrid {
+    grid-template-columns: 1fr;
+  }
+
   .container {
-    padding: 16px;
+    padding: 1rem;
   }
 
   .paper {
-    padding: 24px;
+    padding: 1rem;
   }
 }
