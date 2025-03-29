@@ -74,6 +74,12 @@ export interface ForecastItem {
         pod: string;
     };
     dt_txt: string;
+    rain?: {
+        '1h': number;
+    };
+    snow?: {
+        '1h': number;
+    };
 }
 
 export interface RegisterRequest {
