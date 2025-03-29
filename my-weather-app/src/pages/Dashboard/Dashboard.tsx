@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { CityResponse, getCurrentWeather, WeatherResponse } from '../../api';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { useAuth } from '../../context/AuthContext';
-import { addToFavorites } from '../../api/favoritesApi';
+import { useFavorites } from '../../hooks/useFavorites';
 
 const USE_DUMMY_DATA = true;
 
@@ -25,6 +25,7 @@ const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
     const { isAuthenticated } = useAuth();
+    const { addFavorite } = useFavorites();
 
     const handleSearch = () => {
         setIsSearching(true);
@@ -72,11 +73,10 @@ const Dashboard = () => {
             return;
         }
 
-        try {
-            await addToFavorites(selectedCity);
+        const success = await addFavorite(selectedCity);
+        if (success) {
             setShowSuccessMessage(true);
-        } catch (error) {
-            console.error('Error adding to favorites:', error);
+        } else {
             setShowErrorMessage(true);
         }
     };
