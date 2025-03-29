@@ -30,19 +30,14 @@ export const useWeather = (latitude: string | null, longitude: string | null) =>
         fetchWeatherData();
     }, [latitude, longitude]);
 
-    const convertKelvinToCelsius = (kelvin: number): number => {
-        return Math.round(kelvin - 273.15);
-    };
-
-    const convertKelvinToFahrenheit = (kelvin: number): number => {
-        return Math.round((kelvin - 273.15) * 9 / 5 + 32);
+    const convertCelsiusToFahrenheit = (celsius: number): number => {
+        return Math.round((celsius * 9 / 5) + 32);
     };
 
     return {
         weatherData,
         isLoading,
         error,
-        convertKelvinToCelsius,
-        convertKelvinToFahrenheit
+        convertCelsiusToFahrenheit
     };
 }; 

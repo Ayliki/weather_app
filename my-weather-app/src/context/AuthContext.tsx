@@ -1,50 +1,65 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { loginUser, logoutUser } from '../api/authApi';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { loginUser, logoutUser } from '../api';
+import { DEV_MODE } from '../config';
 
 interface AuthContextType {
     isAuthenticated: boolean;
     login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
-    isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [isAuthenticated, setIsAuthenticated] = useState(() => {
+        if (DEV_MODE) return true; // Always return true in dev mode
+        const token = localStorage.getItem('token');
+        return !!token;
+    });
 
     useEffect(() => {
-        // Check if user is logged in on mount
-        const token = localStorage.getItem('access_token');
-        setIsAuthenticated(!!token);
-        setIsLoading(false);
+        if (DEV_MODE) {
+            setIsAuthenticated(true);
+            localStorage.setItem('token', 'dev-token');
+        }
     }, []);
 
     const login = async (email: string, password: string) => {
+        if (DEV_MODE) {
+            setIsAuthenticated(true);
+            localStorage.setItem('token', 'dev-token');
+            return;
+        }
+
         try {
             const response = await loginUser({ email, password });
-            localStorage.setItem('access_token', response.access_token);
+            localStorage.setItem('token', response.access_token);
             setIsAuthenticated(true);
         } catch (error) {
-            console.error('Login error:', error);
+            console.error('Login failed:', error);
             throw error;
         }
     };
 
     const logout = async () => {
+        if (DEV_MODE) {
+            setIsAuthenticated(false);
+            localStorage.removeItem('token');
+            return;
+        }
+
         try {
             await logoutUser();
-            localStorage.removeItem('access_token');
+            localStorage.removeItem('token');
             setIsAuthenticated(false);
         } catch (error) {
-            console.error('Logout error:', error);
+            console.error('Logout failed:', error);
             throw error;
         }
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, isLoading }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

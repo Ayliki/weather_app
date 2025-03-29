@@ -30,6 +30,7 @@ export const useCities = () => {
         cities,
         isLoading,
         error,
-        searchCities
+        searchCities,
+        setCities
     };
 }; 
