@@ -1,19 +1,75 @@
 .container {
-  padding: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #fafafa, #eeeeee);
+  display: flex;
+  flex-direction: column;
 }
 
-.paper {
-  padding: 2rem;
+.content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.backButton {
+  align-self: flex-start;
+  margin-bottom: 24px;
+}
+
+.weatherRow {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.currentWeather {
+  flex: 0 0 300px;
+}
+
+.forecastContainer {
+  flex: 1;
+  max-width: 800px;
+}
+
+@media (max-width: 1024px) {
+  .weatherRow {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .currentWeather {
+    flex: none;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .forecastContainer {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 600px) {
   .container {
-    padding: 1rem;
+    padding: 16px;
   }
 
-  .paper {
-    padding: 1rem;
+  .content {
+    gap: 24px;
+    padding: 0 16px;
+  }
+
+  .weatherRow {
+    gap: 16px;
+  }
+
+  .backButton {
+    margin-bottom: 16px;
   }
 }
