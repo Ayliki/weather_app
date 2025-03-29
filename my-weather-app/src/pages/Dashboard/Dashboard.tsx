@@ -1,11 +1,13 @@
 import { Box, Snackbar, Alert } from '@mui/material';
 import WeatherCard from '../../components/WeatherCard/WeatherCard';
 import styles from './Dashboard.module.css';
-import { useEffect, useState } from 'react';
-import { CityResponse, getCurrentWeather, WeatherResponse } from '../../api';
+import { useState } from 'react';
+import { CityResponse } from '../../api/types';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { useAuth } from '../../context/AuthContext';
 import { useFavorites } from '../../hooks/useFavorites';
+import { useWeather } from '../../hooks/useWeather';
+import { useCities } from '../../hooks/useCities';
 
 const USE_DUMMY_DATA = true;
 
@@ -18,49 +20,28 @@ const dummyCities: CityResponse[] = [
 const Dashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCity, setSelectedCity] = useState<CityResponse | null>(null);
-    const [weatherData, setWeatherData] = useState<WeatherResponse | null>(null);
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isSearching, setIsSearching] = useState(false);
     const { isAuthenticated } = useAuth();
     const { addFavorite } = useFavorites();
+    const { weatherData, isLoading: isWeatherLoading, convertKelvinToCelsius, convertKelvinToFahrenheit } = useWeather(
+        selectedCity?.latitude.toString() || null,
+        selectedCity?.longitude.toString() || null
+    );
+    const { cities, isLoading: isCitiesLoading, searchCities } = useCities();
 
-    const handleSearch = () => {
-        setIsSearching(true);
-        let foundCity: CityResponse | undefined;
+    const handleSearch = async () => {
         if (USE_DUMMY_DATA) {
-            foundCity = dummyCities.find(
+            const foundCity = dummyCities.find(
                 (city) => city.name.toLowerCase() === searchTerm.toLowerCase()
             );
+            setSelectedCity(foundCity || null);
         } else {
-            // foundCity = cities.find((city) => city.name.toLowerCase() === searchTerm.toLowerCase());
+            await searchCities(searchTerm);
+            // You might want to show a dropdown with the results here
         }
-        setSelectedCity(foundCity || null);
-        setIsSearching(false);
     };
-
-    useEffect(() => {
-        const fetchWeatherData = async () => {
-            if (selectedCity) {
-                setIsLoading(true);
-                try {
-                    const weather = await getCurrentWeather(
-                        selectedCity.latitude.toString(),
-                        selectedCity.longitude.toString()
-                    );
-                    setWeatherData(weather);
-                } catch (error) {
-                    console.error('Error fetching weather data:', error);
-                } finally {
-                    setIsLoading(false);
-                }
-            }
-        };
-
-        fetchWeatherData();
-    }, [selectedCity]);
 
     const handleAddToFavorites = async () => {
         if (!isAuthenticated) {
@@ -81,14 +62,6 @@ const Dashboard = () => {
         }
     };
 
-    const convertKelvinToCelsius = (kelvin: number): number => {
-        return Math.round(kelvin - 273.15);
-    };
-
-    const convertKelvinToFahrenheit = (kelvin: number): number => {
-        return Math.round((kelvin - 273.15) * 9 / 5 + 32);
-    };
-
     return (
         <Box className={styles.container}>
             <Box className={styles.searchBarRow}>
@@ -96,7 +69,7 @@ const Dashboard = () => {
                     searchTerm={searchTerm}
                     onSearchTermChange={setSearchTerm}
                     onSearch={handleSearch}
-                    isLoading={isSearching}
+                    isLoading={isCitiesLoading}
                 />
             </Box>
 
@@ -117,7 +90,7 @@ const Dashboard = () => {
                         }}
                         onAddToFavorites={handleAddToFavorites}
                         isAuthenticated={isAuthenticated}
-                        isLoading={isLoading}
+                        isLoading={isWeatherLoading}
                     />
                 ) : (
                     <p>No city selected. Please search for a city.</p>
