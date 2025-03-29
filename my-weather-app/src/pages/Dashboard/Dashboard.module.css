@@ -7,26 +7,80 @@
 
 .content {
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
 .searchBarRow {
   display: flex;
-  justify-content: flex-end;
-  padding: 16px;
+  justify-content: center;
+  padding: 24px;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
 }
 
 .cardContainer {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 32px;
+  padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.weatherRow {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.currentWeather {
+  flex: 0 0 300px;
+}
+
+.forecastContainer {
+  flex: 1;
+}
+
+.noCitySelected {
+  text-align: center;
+  color: #666;
+  margin-top: 40px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .weatherRow {
+    flex-direction: column;
+  }
+
+  .currentWeather {
+    flex: none;
+    width: 100%;
+  }
 }
 
 @media (max-width: 600px) {
   .container {
     padding: 16px;
+  }
+
+  .searchBarRow {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .cardContainer {
+    gap: 24px;
+    padding: 0 16px;
+  }
+
+  .weatherRow {
+    gap: 16px;
   }
 }

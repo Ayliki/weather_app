@@ -1,5 +1,6 @@
-import { Box, Snackbar, Alert, Menu, MenuItem, ListItemText } from '@mui/material';
+import { Box, Snackbar, Alert, Menu, MenuItem, ListItemText, Typography } from '@mui/material';
 import WeatherCard from '../../components/WeatherCard/WeatherCard';
+import ForecastView from '../../components/ForecastView/ForecastView';
 import styles from './Dashboard.module.css';
 import { useState, useRef } from 'react';
 import { CityResponse, WeatherResponse } from '../../api/types';
@@ -8,6 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useFavorites } from '../../hooks/useFavorites';
 import { useWeather } from '../../hooks/useWeather';
 import { useCities } from '../../hooks/useCities';
+import { dummyForecastData } from '../../data/dummyData';
 
 const USE_DUMMY_DATA = true;
 
@@ -208,6 +210,14 @@ const Dashboard = () => {
         return weatherData;
     };
 
+    const getForecastData = () => {
+        if (USE_DUMMY_DATA && selectedCity) {
+            return dummyForecastData;
+        }
+        // In a real app, you would fetch forecast data here
+        return dummyForecastData;
+    };
+
     return (
         <Box className={styles.container}>
             <Box className={styles.searchBarRow} ref={searchBarRef}>
@@ -240,35 +250,44 @@ const Dashboard = () => {
 
             <Box className={styles.cardContainer}>
                 {selectedCity ? (
-                    <WeatherCard
-                        weatherData={{
-                            city: selectedCity.name,
-                            temperature: getWeatherData() ? {
-                                celsius: getWeatherData()!.temperature,
-                                fahrenheit: convertCelsiusToFahrenheit(getWeatherData()!.temperature),
-                            } : { celsius: 0, fahrenheit: 0 },
-                            description: getWeatherData()?.weather_description || '',
-                            feelsLike: getWeatherData()?.feels_like || 0,
-                            humidity: getWeatherData()?.humidity || 0,
-                            pressure: getWeatherData()?.pressure || 0,
-                            windSpeed: getWeatherData()?.wind_speed || 0,
-                            tempMin: getWeatherData()?.temp_min || 0,
-                            tempMax: getWeatherData()?.temp_max || 0,
-                            seaLevel: getWeatherData()?.sea_level || 0,
-                            groundLevel: getWeatherData()?.grnd_level || 0,
-                            visibility: getWeatherData()?.visibility || 0,
-                            windDeg: getWeatherData()?.wind_deg || 0,
-                            windGust: getWeatherData()?.wind_gust || 0,
-                            clouds: getWeatherData()?.clouds || 0,
-                            rainOneHour: getWeatherData()?.rain_one_hour || null,
-                            snowOneHour: getWeatherData()?.snow_one_hour || null
-                        }}
-                        onAddToFavorites={handleAddToFavorites}
-                        isAuthenticated={isAuthenticated}
-                        isLoading={isWeatherLoading}
-                    />
+                    <Box className={styles.weatherRow}>
+                        <Box className={styles.currentWeather}>
+                            <WeatherCard
+                                weatherData={{
+                                    city: selectedCity.name,
+                                    temperature: getWeatherData() ? {
+                                        celsius: getWeatherData()!.temperature,
+                                        fahrenheit: convertCelsiusToFahrenheit(getWeatherData()!.temperature),
+                                    } : { celsius: 0, fahrenheit: 0 },
+                                    description: getWeatherData()?.weather_description || '',
+                                    feelsLike: getWeatherData()?.feels_like || 0,
+                                    humidity: getWeatherData()?.humidity || 0,
+                                    pressure: getWeatherData()?.pressure || 0,
+                                    windSpeed: getWeatherData()?.wind_speed || 0,
+                                    tempMin: getWeatherData()?.temp_min || 0,
+                                    tempMax: getWeatherData()?.temp_max || 0,
+                                    seaLevel: getWeatherData()?.sea_level || 0,
+                                    groundLevel: getWeatherData()?.grnd_level || 0,
+                                    visibility: getWeatherData()?.visibility || 0,
+                                    windDeg: getWeatherData()?.wind_deg || 0,
+                                    windGust: getWeatherData()?.wind_gust || 0,
+                                    clouds: getWeatherData()?.clouds || 0,
+                                    rainOneHour: getWeatherData()?.rain_one_hour || null,
+                                    snowOneHour: getWeatherData()?.snow_one_hour || null
+                                }}
+                                onAddToFavorites={handleAddToFavorites}
+                                isAuthenticated={isAuthenticated}
+                                isLoading={isWeatherLoading}
+                            />
+                        </Box>
+                        <Box className={styles.forecastContainer}>
+                            <ForecastView forecast={getForecastData()} />
+                        </Box>
+                    </Box>
                 ) : (
-                    <p>No city selected. Please search for a city.</p>
+                    <Typography variant="h6" className={styles.noCitySelected}>
+                        Search for a city to view weather information
+                    </Typography>
                 )}
             </Box>
 
@@ -276,14 +295,9 @@ const Dashboard = () => {
                 open={showLoginPrompt}
                 autoHideDuration={6000}
                 onClose={() => setShowLoginPrompt(false)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert
-                    onClose={() => setShowLoginPrompt(false)}
-                    severity="info"
-                    sx={{ width: '100%' }}
-                >
-                    Please log in to save cities to your favorites
+                <Alert severity="info" onClose={() => setShowLoginPrompt(false)}>
+                    Please log in to add cities to your favorites
                 </Alert>
             </Snackbar>
 
@@ -291,14 +305,9 @@ const Dashboard = () => {
                 open={showSuccessMessage}
                 autoHideDuration={6000}
                 onClose={() => setShowSuccessMessage(false)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert
-                    onClose={() => setShowSuccessMessage(false)}
-                    severity="success"
-                    sx={{ width: '100%' }}
-                >
-                    City added to favorites successfully!
+                <Alert severity="success" onClose={() => setShowSuccessMessage(false)}>
+                    City added to favorites successfully
                 </Alert>
             </Snackbar>
 
@@ -306,14 +315,9 @@ const Dashboard = () => {
                 open={showErrorMessage}
                 autoHideDuration={6000}
                 onClose={() => setShowErrorMessage(false)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert
-                    onClose={() => setShowErrorMessage(false)}
-                    severity="error"
-                    sx={{ width: '100%' }}
-                >
-                    Failed to add city to favorites. Please try again.
+                <Alert severity="error" onClose={() => setShowErrorMessage(false)}>
+                    Failed to add city to favorites
                 </Alert>
             </Snackbar>
         </Box>
